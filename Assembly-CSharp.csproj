@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\MyScripts\CatController.cs" />
+    <Compile Include="Assets\MyScripts\BoxController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

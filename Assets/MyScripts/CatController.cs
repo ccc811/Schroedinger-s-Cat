@@ -9,7 +9,8 @@ public class CatController : MonoBehaviour
     // °´¼üÉèÖÃ
     public KeyCode leftKey = KeyCode.A;      // ×óÒÆ°´¼ü
     public KeyCode rightKey = KeyCode.D;     // ÓÒÒÆ°´¼ü
-    public KeyCode jumpKey = KeyCode.Space;  // ÌøÔ¾°´¼ü
+    public KeyCode jumpKey = KeyCode.W;  // ÌøÔ¾°´¼ü
+    public KeyCode DownKey = KeyCode.S;  // ´«ËÍ°´¼ü
 
     // µØÃæ¼ì²â
     public Transform groundCheck;
@@ -25,6 +26,8 @@ public class CatController : MonoBehaviour
     // ÒÆ¶¯×´Ì¬
     private float horizontalInput = 0f;
     private bool isJumping = false;
+    public bool isInBoxForward = false;
+    public BoxController curBox;
 
     void Start()
     {
@@ -45,6 +48,11 @@ public class CatController : MonoBehaviour
             horizontalInput = -1f;
         if (Input.GetKey(rightKey))
             horizontalInput = 1f;
+
+        if (Input.GetKey(DownKey)&& isInBoxForward&& curBox!=null)
+        {
+            curBox.StartIn();
+        }
 
         // ·­×ª½ÇÉ«³¯Ïò
         if (horizontalInput > 0)
