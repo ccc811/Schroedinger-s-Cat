@@ -8,15 +8,24 @@ public class BoxController : MonoBehaviour
     public BoxController _other;
     public CatController cat;
     public Transform outPoint;
+    public Transform boxMovePos;
+    public Vector3 boxMoveStart;
+    public bool boxCanMove;
+    private bool isMove = false;
+
+
+
     void Start()
     {
+        boxMoveStart = transform.position;
         outPoint = transform.Find("outpoint");
+        boxCanMove = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -38,8 +47,27 @@ public class BoxController : MonoBehaviour
             }
         }
     }
+    public void BoxMove() 
+    {
+        if (boxCanMove && boxMovePos!=null)
+        {
+            if (!isMove) 
+            {
+                transform.position = boxMovePos.position;
+                isMove = true;
+            }              
+            else
+            {
+                transform.position = boxMoveStart;
+                isMove = false;
+
+            }
+        }
+    }
     public void StartIn() 
     {
+        if (cat.curLookBox)
+            cat.curLookBox.boxCanMove=true;
         cat.transform.gameObject.SetActive(false);
         transform.GetComponent<Animator>().Play("boxin");
     }
@@ -53,5 +81,9 @@ public class BoxController : MonoBehaviour
     public void PlayerOutOver() 
     {
         cat.gameObject.SetActive(true);
+        if (cat.curLookBox)
+            cat.curLookBox.boxCanMove = true;
+
+
     }
 }

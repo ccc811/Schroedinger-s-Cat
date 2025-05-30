@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CatController : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class CatController : MonoBehaviour
     private bool isJumping = false;
     public bool isInBoxForward = false;
     public BoxController curBox;
+    public bool isInDoor = false;
+    public LayerMask detectionLayers;
+
+    //当前观测的box
+    public BoxController curLookBox;
 
     void Start()
     {
@@ -53,6 +59,13 @@ public class CatController : MonoBehaviour
         {
             curBox.StartIn();
         }
+        else if (Input.GetKey(DownKey) && isInDoor)
+        {
+            if (SceneManager.sceneCountInBuildSettings> SceneManager.GetActiveScene().buildIndex + 1)
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+
+           // print("过关");
+        }
 
         // 翻转角色朝向
         if (horizontalInput > 0)
@@ -68,6 +81,41 @@ public class CatController : MonoBehaviour
         {
             isJumping = true;
             animator.SetTrigger("Jump");
+        }
+
+
+        // 发射射线的起点（通常是角色位置）
+        Vector2 origin = transform.position;
+
+        // 射线方向（根据角色朝向决定）
+        Vector2 direction = !spriteRenderer.flipX ? Vector2.right : Vector2.left;
+
+        // 发射射线并获取结果
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, 3, detectionLayers);
+
+        // 绘制射线（仅调试时可见）
+        Debug.DrawRay(origin, direction * 3, Color.red);
+
+        // 处理碰撞结果
+        if (hit.collider != null)
+        {
+            Debug.Log("检测到物体: " + hit.collider.tag);
+
+            // 这里可以添加具体逻辑，如停止移动、触发交互等
+            if (hit.collider.CompareTag("Box"))
+            {
+                curLookBox = hit.transform.GetComponent<BoxController>();
+                curLookBox.boxCanMove = false;
+
+            }
+        }
+        else
+        {
+            Debug.Log("没监测 ");
+            if (curLookBox)
+            {
+                curLookBox.boxCanMove = true;
+            }
         }
     }
 

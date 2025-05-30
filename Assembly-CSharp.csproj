@@ -55,6 +55,10 @@
   <ItemGroup>
     <Compile Include="Assets\MyScripts\CatController.cs" />
     <Compile Include="Assets\MyScripts\BoxController.cs" />
+    <Compile Include="Assets\MyScripts\DoorController.cs" />
+    <Compile Include="Assets\MyScripts\KeyController.cs" />
+    <Compile Include="Assets\MyScripts\UIController.cs" />
+    <Compile Include="Assets\MyScripts\BerryController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
