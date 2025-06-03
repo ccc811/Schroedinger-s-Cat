@@ -35,6 +35,8 @@ public class CatController : MonoBehaviour
     //当前观测的box
     public BoxController curLookBox;
 
+    public bool isDead = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -137,5 +139,41 @@ public class CatController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ((collision.transform.tag == "DC")&& !isDead)
+        {
+            Debug.LogError("阵亡");
+            isDead = true;
+            rb.freezeRotation = false;
+            transform.eulerAngles = new Vector3(0, 0, 150);
+            ApplyKnockback(rb);
+            transform.GetComponent<Collider2D>().isTrigger = true;
+        }
+    }
+    public void TakeDamage() 
+    {
+        if (!isDead)
+        {
+            isDead = true;
+            rb.freezeRotation = false;
+            transform.eulerAngles = new Vector3(0, 0, 150);
+            ApplyKnockback(rb);
+            transform.GetComponent<Collider2D>().isTrigger = true;
+        }
+    }
+    private void ApplyKnockback(Rigidbody2D playerRb)
+    {
+        // 计算击退方向（远离地刺）
+        Vector2 knockbackDirection = (playerRb.transform.position - transform.position).normalized;
+
+        // 调整垂直方向的力度
+        knockbackDirection.y = 2;
+
+        // 应用击退力
+        playerRb.velocity = Vector2.zero;
+        playerRb.AddForce(knockbackDirection * 5, ForceMode2D.Impulse);
     }
 }

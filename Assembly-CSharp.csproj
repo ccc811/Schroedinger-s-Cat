@@ -55,10 +55,14 @@
   <ItemGroup>
     <Compile Include="Assets\MyScripts\CatController.cs" />
     <Compile Include="Assets\MyScripts\BoxController.cs" />
+    <Compile Include="Assets\MyScripts\UIController.cs" />
     <Compile Include="Assets\MyScripts\DoorController.cs" />
     <Compile Include="Assets\MyScripts\KeyController.cs" />
-    <Compile Include="Assets\MyScripts\UIController.cs" />
     <Compile Include="Assets\MyScripts\BerryController.cs" />
+    <Compile Include="Assets\MyScripts\CameraFollow.cs" />
+    <Compile Include="Assets\MyScripts\EnemyPatrol.cs" />
+    <Compile Include="Assets\MyScripts\OscillateRotation.cs" />
+    <Compile Include="Assets\MyScripts\EnemyAI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cat
   - Box
+  - Monster
+  - DC
   layers:
   - Default
   - TransparentFX
@@ -15,7 +17,7 @@ TagManager:
   - UI
   - Ground
   - Cat
-  - 
+  - Monster
   - 
   - 
   - 
