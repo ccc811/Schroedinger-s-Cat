@@ -146,30 +146,34 @@ public class EnemyPatrol : MonoBehaviour
     {
         if (!isAlive) return;
 
-        if (headCheck==null)
+        if (headCheck == null)
         {
             ApplyDamageToPlayer(collision.gameObject);
             return;
         }
         // 检测玩家碰撞
-       // Debug.LogError("准备踩头");
-        if (((1 << collision.gameObject.layer) & playerLayer) != 0)
+        // Debug.LogError("准备踩头");
+        if (((1 << collision.gameObject.layer) & playerLayer) != 0 && !collision.GetComponent<CatController>().isDead)
         {
-           // Debug.LogError("采种");
+            // Debug.LogError("采种");
 
             // 检查是否从头顶踩下
-            bool isHeadStomp = CheckHeadStomp(collision);
+            if (!collision.GetComponent<CatController>().isDead)
+            {
+                bool isHeadStomp = CheckHeadStomp(collision);
 
-            if (isHeadStomp)
-            {
-                // 玩家踩头击杀怪物
-                KillEnemy(collision.gameObject);
+                if (isHeadStomp)
+                {
+                    // 玩家踩头击杀怪物
+                    KillEnemy(collision.gameObject);
+                }
+                else
+                {
+                    // 普通碰撞，对玩家造成伤害
+                    ApplyDamageToPlayer(collision.gameObject);
+                }
             }
-            else
-            {
-                // 普通碰撞，对玩家造成伤害
-                ApplyDamageToPlayer(collision.gameObject);
-            }
+        
         }
     }
 

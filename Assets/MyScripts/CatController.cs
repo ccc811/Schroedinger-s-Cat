@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,6 +48,10 @@ public class CatController : MonoBehaviour
     void Update()
     {
         // 地面检测
+        if (isDead)
+        {
+            return;
+        }
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         animator.SetBool("IsGrounded", isGrounded);
 
@@ -158,10 +163,13 @@ public class CatController : MonoBehaviour
         if (!isDead)
         {
             isDead = true;
+            transform.GetComponent<Collider2D>().isTrigger = true;
             rb.freezeRotation = false;
             transform.eulerAngles = new Vector3(0, 0, 150);
             ApplyKnockback(rb);
             transform.GetComponent<Collider2D>().isTrigger = true;
+
+            StartCoroutine(WaitToLoadSceen());
         }
     }
     private void ApplyKnockback(Rigidbody2D playerRb)
@@ -175,5 +183,11 @@ public class CatController : MonoBehaviour
         // 应用击退力
         playerRb.velocity = Vector2.zero;
         playerRb.AddForce(knockbackDirection * 5, ForceMode2D.Impulse);
+    }
+
+    IEnumerator WaitToLoadSceen()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

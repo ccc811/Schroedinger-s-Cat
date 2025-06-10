@@ -3,9 +3,15 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - BerryController
     - BoxController
+    - CameraFollow
     - CatController
     - DoorController
+    - EnemyAI
+    - EnemyPatrol
+    - HitRotation
     - KeyController
+    - MonsterPatrolNew
+    - OscillateRotation
     - UIController
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
@@ -15,7 +21,6 @@ ScriptsOnlyBuild:
     Unity.2D.IK.Runtime.dll:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
-    - UnityEditor.Tilemaps.GridBrush
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
     - UnityEditor.Tilemaps.GridPalettes
@@ -45,10 +50,9 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
-    - UnityEngine.UI.Outline
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/Level1.unity:
+    Assets/Scenes/Level4.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -80,203 +84,45 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 620}
     - Class: 114
-      Script: {instanceID: 1512}
+      Script: {instanceID: 1452}
     - Class: 114
-      Script: {instanceID: 1696}
+      Script: {instanceID: 1514}
     - Class: 114
-      Script: {instanceID: 1984}
+      Script: {instanceID: 1698}
     - Class: 114
-      Script: {instanceID: 2204}
+      Script: {instanceID: 1986}
     - Class: 114
-      Script: {instanceID: 2618}
+      Script: {instanceID: 2410}
     - Class: 114
-      Script: {instanceID: 2778}
+      Script: {instanceID: 2620}
     - Class: 114
-      Script: {instanceID: 2994}
+      Script: {instanceID: 2780}
     - Class: 114
-      Script: {instanceID: 3238}
+      Script: {instanceID: 2996}
     - Class: 114
-      Script: {instanceID: 3350}
+      Script: {instanceID: 3048}
     - Class: 114
-      Script: {instanceID: 3648}
+      Script: {instanceID: 3242}
     - Class: 114
-      Script: {instanceID: 5518}
+      Script: {instanceID: 3354}
     - Class: 114
-      Script: {instanceID: 22534}
+      Script: {instanceID: 3448}
     - Class: 114
-      Script: {instanceID: 30386}
+      Script: {instanceID: 3498}
     - Class: 114
-      Script: {instanceID: 30392}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 212
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    - Class: 19719996
-      Script: {instanceID: 0}
-    - Class: 156049354
-      Script: {instanceID: 0}
-    - Class: 483693784
-      Script: {instanceID: 0}
-    - Class: 1839735485
-      Script: {instanceID: 0}
-    Assets/Scenes/Level2.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 50
-      Script: {instanceID: 0}
-    - Class: 58
-      Script: {instanceID: 0}
-    - Class: 61
-      Script: {instanceID: 0}
-    - Class: 74
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 91
-      Script: {instanceID: 0}
-    - Class: 95
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
+      Script: {instanceID: 3564}
     - Class: 114
-      Script: {instanceID: 620}
+      Script: {instanceID: 3708}
     - Class: 114
-      Script: {instanceID: 1512}
+      Script: {instanceID: 4966}
     - Class: 114
-      Script: {instanceID: 1696}
+      Script: {instanceID: 5166}
     - Class: 114
-      Script: {instanceID: 1984}
+      Script: {instanceID: 5410}
     - Class: 114
-      Script: {instanceID: 2204}
+      Script: {instanceID: 5538}
     - Class: 114
-      Script: {instanceID: 2618}
-    - Class: 114
-      Script: {instanceID: 2778}
-    - Class: 114
-      Script: {instanceID: 2994}
-    - Class: 114
-      Script: {instanceID: 3238}
-    - Class: 114
-      Script: {instanceID: 3350}
-    - Class: 114
-      Script: {instanceID: 5518}
-    - Class: 114
-      Script: {instanceID: 22534}
-    - Class: 114
-      Script: {instanceID: 26574}
-    - Class: 114
-      Script: {instanceID: 30386}
-    - Class: 114
-      Script: {instanceID: 30392}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 212
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    - Class: 19719996
-      Script: {instanceID: 0}
-    - Class: 156049354
-      Script: {instanceID: 0}
-    - Class: 483693784
-      Script: {instanceID: 0}
-    - Class: 1839735485
-      Script: {instanceID: 0}
-    Assets/Scenes/Level3.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 50
-      Script: {instanceID: 0}
-    - Class: 58
-      Script: {instanceID: 0}
-    - Class: 61
-      Script: {instanceID: 0}
-    - Class: 74
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 91
-      Script: {instanceID: 0}
-    - Class: 95
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 620}
-    - Class: 114
-      Script: {instanceID: 1512}
-    - Class: 114
-      Script: {instanceID: 1696}
-    - Class: 114
-      Script: {instanceID: 1984}
-    - Class: 114
-      Script: {instanceID: 2204}
-    - Class: 114
-      Script: {instanceID: 2618}
-    - Class: 114
-      Script: {instanceID: 2778}
-    - Class: 114
-      Script: {instanceID: 2994}
-    - Class: 114
-      Script: {instanceID: 3238}
-    - Class: 114
-      Script: {instanceID: 3350}
-    - Class: 114
-      Script: {instanceID: 5518}
-    - Class: 114
-      Script: {instanceID: 22534}
-    - Class: 114
-      Script: {instanceID: 26574}
-    - Class: 114
-      Script: {instanceID: 30386}
-    - Class: 114
-      Script: {instanceID: 30392}
+      Script: {instanceID: 29110}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -304,6 +150,12 @@ ScriptsOnlyBuild:
     - Class: 1839735485
       Script: {instanceID: 0}
   scriptHashData:
+  - hash:
+      serializedVersion: 2
+      Hash: 699619b86d9359741a4f58540298c80b
+    assemblyName: UnityEngine.UI.dll
+    namespaceName: UnityEngine.UI
+    className: Text
   - hash:
       serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
@@ -366,7 +218,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: 6d95de8508313524a5ca27791a29dad7
+      Hash: 7aa0df79f7db2a677f8daf1c08f326ea
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CatController
@@ -414,12 +266,6 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: 699619b86d9359741a4f58540298c80b
-    assemblyName: UnityEngine.UI.dll
-    namespaceName: UnityEngine.UI
-    className: Text
-  - hash:
-      serializedVersion: 2
       Hash: f1d735cc1a21c3704ab52568f4fbfcf8
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner
@@ -436,6 +282,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 196ace3e929fecb9800af25427d2e078
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UIController
   - hash:
       serializedVersion: 2
       Hash: cfdd0010efd7b54c2b7512656dbc9119
@@ -502,6 +354,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SelectionCaret
+  - hash:
+      serializedVersion: 2
+      Hash: a1aed17f3079345a497d1b3a4106e517
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: DoorController
   - hash:
       serializedVersion: 2
       Hash: a306e12d896ddcca949923c805691027
@@ -576,10 +434,28 @@ ScriptsOnlyBuild:
     className: SpriteShapeController
   - hash:
       serializedVersion: 2
+      Hash: 63225b798b5504b1a44ed5440d467375
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CameraFollow
+  - hash:
+      serializedVersion: 2
       Hash: 4fd8bf02e3089425d3502e26c44ba31a
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextContainer
+  - hash:
+      serializedVersion: 2
+      Hash: 43ef99c9db0b86d4a5636530148cdaed
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EnemyAI
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HitRotation
   - hash:
       serializedVersion: 2
       Hash: 8aa3d6ccbcb54ee8db6c1229854adaaa
@@ -592,6 +468,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Outline
+  - hash:
+      serializedVersion: 2
+      Hash: c83d3b528e2fd2d5d814b531ca78919a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: KeyController
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -634,6 +516,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: PlayModeRunnerCallback
+  - hash:
+      serializedVersion: 2
+      Hash: 10f782141f2af90c482bd1db565ab585
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MonsterPatrol
   - hash:
       serializedVersion: 2
       Hash: bd3cf68c8964d3c66d1c43f4f98508c9
@@ -786,6 +674,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: c540d9da1b6abc06776239720d0d0e47
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EnemyPatrol
+  - hash:
+      serializedVersion: 2
       Hash: fd68d84f33fad85aac38f2739c0ee270
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -798,10 +692,22 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
+      Hash: b2f56cccf7689d87bd9832fcb69a9348
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OscillateRotation
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Unity.2D.Animation.Runtime.dll
     namespaceName: UnityEngine.U2D.Animation
     className: BufferManager
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BerryController
   - hash:
       serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744
@@ -834,31 +740,11 @@ ScriptsOnlyBuild:
     className: FabrikSolver2D
   - hash:
       serializedVersion: 2
-      Hash: a1aed17f3079345a497d1b3a4106e517
+      Hash: 42e096557c98d39dbe18fbf01ab9f3f2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: DoorController
-  - hash:
-      serializedVersion: 2
-      Hash: c83d3b528e2fd2d5d814b531ca78919a
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: KeyController
-  - hash:
-      serializedVersion: 2
-      Hash: 196ace3e929fecb9800af25427d2e078
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: UIController
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: BerryController
+    className: MonsterPatrolNew
   platform: 19
   scenePathNames:
-  - Assets/Scenes/Level1.unity
-  - Assets/Scenes/Level2.unity
-  - Assets/Scenes/Level3.unity
-  playerPath: "F:/\u684C\u97622/CatAndBox/CatAndBox.exe"
+  - Assets/Scenes/Level4.unity
+  playerPath: "F:/\u684C\u97622/Cat/CatAndBox.exe"

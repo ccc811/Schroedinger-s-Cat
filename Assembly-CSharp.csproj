@@ -57,12 +57,15 @@
     <Compile Include="Assets\MyScripts\BoxController.cs" />
     <Compile Include="Assets\MyScripts\UIController.cs" />
     <Compile Include="Assets\MyScripts\DoorController.cs" />
-    <Compile Include="Assets\MyScripts\KeyController.cs" />
-    <Compile Include="Assets\MyScripts\BerryController.cs" />
     <Compile Include="Assets\MyScripts\CameraFollow.cs" />
+    <Compile Include="Assets\MyScripts\EnemyAI.cs" />
+    <Compile Include="Assets\HitRotation.cs" />
+    <Compile Include="Assets\MyScripts\KeyController.cs" />
+    <Compile Include="Assets\MyScripts\MonsterPatrol.cs" />
     <Compile Include="Assets\MyScripts\EnemyPatrol.cs" />
     <Compile Include="Assets\MyScripts\OscillateRotation.cs" />
-    <Compile Include="Assets\MyScripts\EnemyAI.cs" />
+    <Compile Include="Assets\MyScripts\BerryController.cs" />
+    <Compile Include="Assets\MyScripts\MonsterPatrolNew.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
