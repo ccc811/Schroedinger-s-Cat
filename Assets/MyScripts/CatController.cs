@@ -47,15 +47,15 @@ public class CatController : MonoBehaviour
     private bool isTouchingRightWall;
     private void CheckSurroundings()
     {
-        // ¼ì²â×ó²àÇ½±Ú
+        // left wall
         isTouchingLeftWall = Physics2D.Raycast(transform.position, -Vector2.right, wallCheckDistance, whatIsWall);
 
-        // ¼ì²âÓÒ²àÇ½±Ú
+        // right wall
         isTouchingRightWall = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, whatIsWall);
 
         if (isTouchingRightWall)
         {
-            Debug.LogError("¼ì²âµ½ÓÒÇ½±Ú");
+            Debug.LogError("touch right wall");
         }
     }
     void Start()
@@ -151,7 +151,7 @@ public class CatController : MonoBehaviour
             horizontalInput = 0;
         }
 
-        // µ±Åöµ½ÓÒ²àÇ½±ÚÊ±£¬½ûÖ¹ÏòÓÒÒÆ¶¯
+        // When reaching the right wall, do not move to the right.
         if (isTouchingRightWall && horizontalInput > 0)
         {
             horizontalInput = 0;
