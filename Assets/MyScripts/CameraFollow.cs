@@ -2,27 +2,27 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private Transform target; // 相机跟随的目标
-    [SerializeField] private float smoothSpeed = 0.125f; // 相机平滑移动的速度
-    [SerializeField] private Vector3 offset; // 相机与目标的偏移量
+    [SerializeField] private Transform target; // The target the camera will follow
+    [SerializeField] private float smoothSpeed = 0.125f; // The speed at which the camera moves smoothly
+    [SerializeField] private Vector3 offset; // The offset between the camera and the target
 
-    [Header("边界限制")]
-    [SerializeField] private bool limitX = true; // 是否限制X轴移动
-    [SerializeField] private bool limitY = true; // 是否限制Y轴移动
-    [SerializeField] private float minX; // X轴最小边界
-    [SerializeField] private float maxX; // X轴最大边界
-    [SerializeField] private float minY; // Y轴最小边界
-    [SerializeField] private float maxY; // Y轴最大边界
+    [Header("Boundary Limits")]
+    [SerializeField] private bool limitX = true; // Whether to limit movement on the X axis
+    [SerializeField] private bool limitY = true; // Whether to limit movement on the Y axis
+    [SerializeField] private float minX; // Minimum boundary for X axis
+    [SerializeField] private float maxX; // Maximum boundary for X axis
+    [SerializeField] private float minY; // Minimum boundary for Y axis
+    [SerializeField] private float maxY; // Maximum boundary for Y axis
 
     private void LateUpdate()
     {
         print(123123123);
         if (target == null) return;
 
-        // 计算相机的目标位置
+        // Calculate the desired position for the camera
         Vector3 desiredPosition = target.position + offset;
 
-        // 应用边界限制
+        // Apply boundary limits
         if (limitX)
         {
             desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
@@ -33,26 +33,26 @@ public class CameraFollow : MonoBehaviour
             desiredPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
         }
 
-        // 保持相机Z轴不变
+        // Keep the camera's Z axis unchanged
         desiredPosition.z = transform.position.z;
 
-        // 平滑移动相机
+        // Smoothly move the camera
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
         transform.position = smoothedPosition;
     }
 
-    // 在编辑器中绘制边界可视化
+    // Draw boundary visualization in the editor
     private void OnDrawGizmosSelected()
     {
         if (!limitX && !limitY) return;
 
         Gizmos.color = Color.red;
 
-        // 计算相机的半宽高
+        // Calculate the camera's half width and height
         float cameraHeight = Camera.main.orthographicSize * 2;
         float cameraWidth = cameraHeight * Camera.main.aspect;
 
-        // 绘制X轴边界
+        // Draw X axis boundaries
         if (limitX)
         {
             Vector3 topLeft = new Vector3(minX, transform.position.y + cameraHeight / 2, 0);
@@ -64,7 +64,7 @@ public class CameraFollow : MonoBehaviour
             Gizmos.DrawLine(topRight, bottomRight);
         }
 
-        // 绘制Y轴边界
+        // Draw Y axis boundaries
         if (limitY)
         {
             Vector3 topLeft = new Vector3(transform.position.x - cameraWidth / 2, maxY, 0);

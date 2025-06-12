@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class MonsterPatrolNew : MonoBehaviour
 {
-    [Header("巡逻参数")]
+    [Header("Patrol Parameters")]
     public Transform pointA;
     public Transform pointB;
     public float patrolSpeed = 2f;
     public float chargeSpeed = 5f;
-    public float cooldownFollowSpeed = 3f; // 冷却期间跟随速度
+    public float cooldownFollowSpeed = 3f; // Follow speed during cooldown
 
-    [Header("检测参数")]
+    [Header("Detection Parameters")]
     public float detectionDistance = 5f;
     public float detectionHeight = 1f;
     public float sideDetectionHeight = 1f;
@@ -18,18 +18,18 @@ public class MonsterPatrolNew : MonoBehaviour
     public LayerMask playerLayer;
     public LayerMask wallLayer;
 
-    [Header("冲锋参数")]
+    [Header("Charge Parameters")]
     public float chargeDuration = 2f;
     public float cooldownDuration = 1f;
     public float chargeWarningTime = 1f;
 
-    [Header("碰撞参数")]
+    [Header("Collision Parameters")]
     public float wallBounceBackSpeed = 2f;
     public float wallBounceUpSpeed = 3f;
     public float wallBounceBackDuration = 0.3f;
     public float stunDuration = 2f;
 
-    [Header("视觉元素")]
+    [Header("Visual Elements")]
     public GameObject stunSprite;
     public Vector3 stunSpriteOffset;
     public float stunSpriteScale = 1f;
@@ -37,14 +37,14 @@ public class MonsterPatrolNew : MonoBehaviour
     public Vector3 chargeWarningSpriteOffset;
     public float chargeWarningSpriteScale = 1f;
 
-    // 状态计时器
+    // State timers
     private float chargeTimer;
     private float cooldownTimer;
     private float bounceTimer;
     private float stunTimer;
     private float chargeWarningTimer;
 
-    // 状态标志
+    // State flags
     private bool isCharging;
     private bool isOnCooldown;
     private bool isBouncingBack;
@@ -54,18 +54,18 @@ public class MonsterPatrolNew : MonoBehaviour
     private bool wasHeadingToA;
     private bool isWaitingForCharge;
 
-    // 组件引用
+    // Component references
     private Rigidbody2D rb;
     private Collider2D col;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    // 移动方向和目标
+    // Movement direction and target
     private Vector2 chargeDirection;
     private Transform currentTarget;
     private Transform playerTransform;
 
-    // 动画参数哈希
+    // Animation parameter hashes
     private int walkParamHash;
     private int chargeParamHash;
     private int cooldownParamHash;
@@ -82,7 +82,7 @@ public class MonsterPatrolNew : MonoBehaviour
         animator = GetComponent<Animator>();
         currentTarget = pointA;
 
-        // 初始化动画参数哈希
+        // Initialize animation parameter hashes
         if (animator != null)
         {
             walkParamHash = Animator.StringToHash("isWalking");
@@ -94,7 +94,7 @@ public class MonsterPatrolNew : MonoBehaviour
             followParamHash = Animator.StringToHash("isFollowing");
         }
 
-        //// 初始化视觉元素
+        //// Initialize visual elements
         //if (stunSprite != null)
         //{
         //    stunSprite.SetActive(false);
@@ -132,7 +132,7 @@ public class MonsterPatrolNew : MonoBehaviour
             return;
         }
 
-        // 检测玩家（即使在冷却期间也需要检测）
+        // Detect player (even during cooldown)
         DetectPlayer();
 
         if (isOnCooldown)
@@ -159,23 +159,23 @@ public class MonsterPatrolNew : MonoBehaviour
 
     void Patrol()
     {
-        // 记录巡逻方向
+        // Record patrol direction
         wasHeadingToA = currentTarget == pointA;
 
-        // 到达目标点时切换
+        // Switch target when reaching the destination
         if (Vector2.Distance(transform.position, currentTarget.position) < 0.1f)
         {
             currentTarget = wasHeadingToA ? pointB : pointA;
         }
 
-        // 向目标点移动
+        // Move towards target
         Vector2 direction = (currentTarget.position - transform.position).normalized;
         rb.velocity = new Vector2(direction.x * patrolSpeed, rb.velocity.y);
 
-        // 翻转精灵
+        // Flip sprite
         spriteRenderer.flipX = direction.x < 0;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(walkParamHash, true);
         SetAnimatorBool(chargeParamHash, false);
         SetAnimatorBool(cooldownParamHash, false);
@@ -187,11 +187,11 @@ public class MonsterPatrolNew : MonoBehaviour
 
     void DetectPlayer()
     {
-        // 重置玩家检测状态
+        // Reset player detection state
         isFollowingPlayer = false;
         playerTransform = null;
 
-        // 左侧检测区域
+        // Left detection area
         Vector2 leftOrigin = (Vector2)transform.position + Vector2.up * sideDetectionHeight / 2;
         Vector2 leftSize = new Vector2(sideDetectionWidth, sideDetectionHeight);
 
@@ -203,7 +203,7 @@ public class MonsterPatrolNew : MonoBehaviour
             sideDetectionDistance,
             playerLayer);
 
-        // 右侧检测区域
+        // Right detection area
         Vector2 rightOrigin = (Vector2)transform.position + Vector2.up * sideDetectionHeight / 2;
         Vector2 rightSize = new Vector2(sideDetectionWidth, sideDetectionHeight);
 
@@ -215,19 +215,19 @@ public class MonsterPatrolNew : MonoBehaviour
             sideDetectionDistance,
             playerLayer);
 
-        // 处理左侧检测结果
+        // Process left detection results
         foreach (RaycastHit2D hit in leftHits)
         {
             if (hit.collider != null && hit.collider.CompareTag("Cat"))
             {
                 isFollowingPlayer = true;
                 playerTransform = hit.collider.transform;
-                Debug.Log("左侧检测区域检测到玩家");
+                Debug.Log("Player detected in left detection area");
                 break;
             }
         }
 
-        // 处理右侧检测结果（如果左侧未检测到）
+        // Process right detection results (if not detected on left)
         if (!isFollowingPlayer)
         {
             foreach (RaycastHit2D hit in rightHits)
@@ -236,7 +236,7 @@ public class MonsterPatrolNew : MonoBehaviour
                 {
                     isFollowingPlayer = true;
                     playerTransform = hit.collider.transform;
-                    Debug.Log("右侧检测区域检测到玩家");
+                    Debug.Log("Player detected in right detection area");
                     break;
                 }
             }
@@ -251,17 +251,17 @@ public class MonsterPatrolNew : MonoBehaviour
             return;
         }
 
-        // 使用适当的速度跟随玩家
+        // Follow player with appropriate speed
         float followSpeed = isOnCooldown ? cooldownFollowSpeed : patrolSpeed;
 
-        // 计算朝向玩家的方向
+        // Calculate direction towards player
         Vector2 direction = (playerTransform.position - transform.position).normalized;
         rb.velocity = new Vector2(direction.x * followSpeed, rb.velocity.y);
 
-        // 翻转精灵
+        // Flip sprite
         spriteRenderer.flipX = direction.x < 0;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(walkParamHash, true);
         SetAnimatorBool(chargeParamHash, false);
         SetAnimatorBool(cooldownParamHash, isOnCooldown);
@@ -270,7 +270,7 @@ public class MonsterPatrolNew : MonoBehaviour
         SetAnimatorBool(warningParamHash, false);
         SetAnimatorBool(followParamHash, true);
 
-        // 如果检测到玩家且距离足够近，准备冲锋（仅在非冷却状态下）
+        // If player is detected and close enough, prepare to charge (only when not on cooldown)
         if (!isOnCooldown && playerTransform != null)
         {
             float distance = Vector2.Distance(transform.position, playerTransform.position);
@@ -287,7 +287,7 @@ public class MonsterPatrolNew : MonoBehaviour
         isWaitingForCharge = true;
         chargeWarningTimer = 0f;
 
-        // 计算冲锋方向
+        // Calculate charge direction
         if (playerTransform != null)
         {
             chargeDirection = (playerTransform.position - transform.position).normalized;
@@ -299,14 +299,14 @@ public class MonsterPatrolNew : MonoBehaviour
             chargeDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
         }
 
-        // 显示预警图片
+        // Show warning visual
         if (chargeWarningSprite != null)
             chargeWarningSprite.SetActive(true);
 
-        // 停止移动
+        // Stop movement
         rb.velocity = Vector2.zero;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(walkParamHash, false);
         SetAnimatorBool(chargeParamHash, false);
         SetAnimatorBool(cooldownParamHash, false);
@@ -315,7 +315,7 @@ public class MonsterPatrolNew : MonoBehaviour
         SetAnimatorBool(warningParamHash, true);
         SetAnimatorBool(followParamHash, false);
 
-        Debug.Log("开始冲锋预警");
+        Debug.Log("Charge warning started");
     }
 
     void HandleChargeWarning()
@@ -327,11 +327,11 @@ public class MonsterPatrolNew : MonoBehaviour
             isShowingChargeWarning = false;
             isWaitingForCharge = false;
 
-            // 隐藏预警图片
+            // Hide warning visual
             if (chargeWarningSprite != null)
                 chargeWarningSprite.SetActive(false);
 
-            // 开始冲锋
+            // Start charging
             StartCharging();
         }
     }
@@ -341,22 +341,22 @@ public class MonsterPatrolNew : MonoBehaviour
         isCharging = true;
         chargeTimer = 0f;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(chargeParamHash, true);
         SetAnimatorBool(warningParamHash, false);
 
-        Debug.Log("开始冲锋");
+        Debug.Log("Charging started");
     }
 
     void HandleCharging()
     {
-        // 设置冲锋速度
+        // Set charge velocity
         rb.velocity = new Vector2(chargeDirection.x * chargeSpeed, rb.velocity.y);
 
-        // 更新计时器
+        // Update timer
         chargeTimer += Time.deltaTime;
 
-        // 检查是否撞到墙或冲锋时间结束
+        // Check if hit a wall or charge time ended
         if (HasHitWall() || chargeTimer >= chargeDuration)
         {
             StopCharging();
@@ -364,12 +364,12 @@ public class MonsterPatrolNew : MonoBehaviour
             if (HasHitWall())
             {
                 StartBounceBack();
-                Debug.Log("撞到墙，开始回弹");
+                Debug.Log("Hit a wall, starting bounce back");
             }
             else
             {
                 StartCooldown();
-                Debug.Log("冲锋时间结束，进入冷却");
+                Debug.Log("Charge time ended, entering cooldown");
             }
         }
     }
@@ -394,11 +394,11 @@ public class MonsterPatrolNew : MonoBehaviour
         isBouncingBack = true;
         bounceTimer = 0f;
 
-        // 设置回弹速度
+        // Set bounce velocity
         Vector2 bounceDirection = new Vector2(-chargeDirection.x * wallBounceBackSpeed, wallBounceUpSpeed);
         rb.velocity = bounceDirection;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(bounceParamHash, true);
         SetAnimatorBool(chargeParamHash, false);
     }
@@ -411,7 +411,7 @@ public class MonsterPatrolNew : MonoBehaviour
         {
             isBouncingBack = false;
             StartStun();
-            Debug.Log("回弹结束，进入眩晕");
+            Debug.Log("Bounce back ended, entering stun");
         }
     }
 
@@ -421,11 +421,11 @@ public class MonsterPatrolNew : MonoBehaviour
         stunTimer = 0f;
         rb.velocity = Vector2.zero;
 
-        // 显示眩晕图片
+        // Show stun visual
         if (stunSprite != null)
             stunSprite.SetActive(true);
 
-        // 设置动画
+        // Set animation
         animator.Play("Idle");
         SetAnimatorBool(stunParamHash, true);
         SetAnimatorBool(bounceParamHash, false);
@@ -439,12 +439,12 @@ public class MonsterPatrolNew : MonoBehaviour
         {
             isStunned = false;
 
-            // 隐藏眩晕图片
+            // Hide stun visual
             if (stunSprite != null)
                 stunSprite.SetActive(false);
 
             StartCooldown();
-            Debug.Log("眩晕结束，进入冷却");
+            Debug.Log("Stun ended, entering cooldown");
         }
     }
 
@@ -459,7 +459,7 @@ public class MonsterPatrolNew : MonoBehaviour
         isOnCooldown = true;
         cooldownTimer = 0f;
 
-        // 设置动画
+        // Set animation
         SetAnimatorBool(cooldownParamHash, true);
     }
 
@@ -467,7 +467,7 @@ public class MonsterPatrolNew : MonoBehaviour
     {
         cooldownTimer += Time.deltaTime;
 
-        // 在冷却期间，如果检测到玩家则跟随，否则继续巡逻
+        // During cooldown, follow player if detected, otherwise patrol
         if (isFollowingPlayer)
         {
             FollowPlayer();
@@ -480,7 +480,7 @@ public class MonsterPatrolNew : MonoBehaviour
         if (cooldownTimer >= cooldownDuration)
         {
             isOnCooldown = false;
-            Debug.Log("冷却结束，恢复正常巡逻");
+            Debug.Log("Cooldown ended, resuming normal patrol");
         }
     }
 
@@ -494,17 +494,17 @@ public class MonsterPatrolNew : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // 绘制巡逻路径
+        // Draw patrol path
         if (pointA != null && pointB != null)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(pointA.position, pointB.position);
         }
 
-        // 绘制左右检测区域
+        // Draw left and right detection areas
         if (spriteRenderer != null)
         {
-            // 左侧检测区域
+            // Left detection area
             Vector2 leftOrigin = (Vector2)transform.position + Vector2.up * sideDetectionHeight / 2;
             Vector2 leftSize = new Vector2(sideDetectionWidth, sideDetectionHeight);
 
@@ -513,7 +513,7 @@ public class MonsterPatrolNew : MonoBehaviour
                 leftOrigin + Vector2.left * sideDetectionDistance / 2,
                 new Vector3(sideDetectionDistance, sideDetectionHeight, 0.1f));
 
-            // 右侧检测区域
+            // Right detection area
             Vector2 rightOrigin = (Vector2)transform.position + Vector2.up * sideDetectionHeight / 2;
             Vector2 rightSize = new Vector2(sideDetectionWidth, sideDetectionHeight);
 
@@ -522,7 +522,7 @@ public class MonsterPatrolNew : MonoBehaviour
                 new Vector3(sideDetectionDistance, sideDetectionHeight, 0.1f));
         }
 
-        // 绘制冲锋检测区域
+        // Draw charge detection area
         if (spriteRenderer != null)
         {
             Color gizmoColor;
@@ -548,7 +548,7 @@ public class MonsterPatrolNew : MonoBehaviour
             Gizmos.color = gizmoColor;
             Gizmos.DrawCube(center, size);
 
-            // 绘制边框
+            // Draw wireframe
             Gizmos.color = Color.black;
             Gizmos.DrawWireCube(center, size);
         }
@@ -556,18 +556,17 @@ public class MonsterPatrolNew : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 玩家从头顶踩下的处理
+        // Handle player stomping from above
         if ((1 << collision.gameObject.layer & playerLayer) != 0 && !collision.GetComponent<CatController>().isDead)
         {
             if (IsHeadStomp(collision))
             {
                 StartStun();
-                Debug.Log("被玩家踩头，进入眩晕");
-
+                Debug.Log("Stomped by player, entering stun");
             }
             else
             {
-                // 对玩家造成伤害的逻辑
+                // Logic to deal damage to player
                 ApplyDamageToPlayer(collision.gameObject);
             }
         }
@@ -575,7 +574,7 @@ public class MonsterPatrolNew : MonoBehaviour
 
     private bool IsHeadStomp(Collider2D playerCollider)
     {
-        // 检测是否从头顶踩下的逻辑
+        // Logic to detect stomp from above
         Vector2 boxSize = new Vector2(col.bounds.size.x * 0.8f, 0.2f);
         Vector2 boxCenter = (Vector2)transform.position + Vector2.up * (col.bounds.size.y * 0.5f + 0.1f);
 
@@ -584,7 +583,7 @@ public class MonsterPatrolNew : MonoBehaviour
         {
             if (collider == playerCollider)
             {
-                // 给玩家一个弹跳力
+                // Give player bounce force
                 Rigidbody2D playerRb = playerCollider.GetComponent<Rigidbody2D>();
                 if (playerRb != null)
                 {
@@ -598,7 +597,7 @@ public class MonsterPatrolNew : MonoBehaviour
 
     private void ApplyDamageToPlayer(GameObject player)
     {
-        // 对玩家造成伤害的逻辑
+        // Logic to deal damage to player
         CatController playerHealth = player.GetComponent<CatController>();
         if (playerHealth != null)
         {

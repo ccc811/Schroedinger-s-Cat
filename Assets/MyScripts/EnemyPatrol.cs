@@ -3,33 +3,33 @@ using UnityEngine.Events;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    [Header("巡逻设置")]
-    [SerializeField] private Transform[] waypoints; // 巡逻路径点
-    [SerializeField] private float moveSpeed = 2f; // 移动速度
-    [SerializeField] private float waitTime = 1f; // 在路径点等待的时间
-    [SerializeField] private PatrolAxis patrolAxis = PatrolAxis.Horizontal; // 巡逻轴（水平/垂直）
+    [Header("Patrol Settings")]
+    [SerializeField] private Transform[] waypoints; // Patrol path points
+    [SerializeField] private float moveSpeed = 2f; // Movement speed
+    [SerializeField] private float waitTime = 1f; // Wait time at waypoints
+    [SerializeField] private PatrolAxis patrolAxis = PatrolAxis.Horizontal; // Patrol axis (horizontal/vertical)
 
-    [Header("战斗设置")]
-    [SerializeField] private int damage = 1; // 对玩家造成的伤害
-    [SerializeField] private Transform headCheck; // 头顶检测点
-    [SerializeField] private float headCheckRadius = 0.2f; // 头顶检测半径
-    [SerializeField] private LayerMask playerLayer; // 玩家层
-    [SerializeField] private float stompBounce = 5f; // 玩家踩头后的弹跳力
+    [Header("Combat Settings")]
+    [SerializeField] private int damage = 1; // Damage to player
+    [SerializeField] private Transform headCheck; // Head detection point
+    [SerializeField] private float headCheckRadius = 0.2f; // Head detection radius
+    [SerializeField] private LayerMask playerLayer; // Player layer
+    [SerializeField] private float stompBounce = 5f; // Bounce force when player stomps head
 
-    [Header("状态")]
-    [SerializeField] private bool isAlive = true; // 怪物是否存活
-    [SerializeField] private bool isFacingRight = true; // 怪物是否面朝右侧
+    [Header("Status")]
+    [SerializeField] private bool isAlive = true; // Enemy is alive
+    [SerializeField] private bool isFacingRight = true; // Enemy is facing right
 
-    private int currentWaypointIndex = 0; // 当前巡逻点索引
-    private float waitCounter = 0f; // 等待计时器
+    private int currentWaypointIndex = 0; // Current waypoint index
+    private float waitCounter = 0f; // Wait timer
     private Animator anim;
     private Collider2D col;
     private bool isWaiting = false;
 
-    // 事件系统
-    public UnityEvent OnEnemyKilled; // 怪物被击杀时触发
+    // Event system
+    public UnityEvent OnEnemyKilled; // Triggered when enemy is killed
 
-    // 巡逻轴枚举
+    // Patrol axis enum
     public enum PatrolAxis
     {
         Horizontal,
@@ -41,19 +41,19 @@ public class EnemyPatrol : MonoBehaviour
         anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
 
-        // 确保至少有两个巡逻点
+        // Ensure there are at least two waypoints
         if (waypoints.Length < 2)
         {
-            Debug.LogError("至少需要两个巡逻点!", gameObject);
+            Debug.LogError("At least two waypoints are required!", gameObject);
         }
 
-        // 初始化位置到第一个巡逻点
+        // Initialize position to first waypoint
         if (waypoints.Length > 0)
         {
             transform.position = waypoints[0].position;
         }
 
-        // 确保碰撞器是触发器
+        // Ensure collider is a trigger
         if (col != null)
             col.isTrigger = true;
     }
@@ -64,13 +64,13 @@ public class EnemyPatrol : MonoBehaviour
 
         if (isWaiting)
         {
-            // 等待时间计数
+            // Wait time counter
             waitCounter += Time.deltaTime;
             if (waitCounter >= waitTime)
             {
                 isWaiting = false;
 
-                // 只有水平巡逻时才需要翻转方向
+                // Only flip direction for horizontal patrol
                 if (patrolAxis == PatrolAxis.Horizontal)
                 {
                     Flip();
@@ -79,22 +79,22 @@ public class EnemyPatrol : MonoBehaviour
         }
         else
         {
-            // 向目标巡逻点移动
+            // Move to target waypoint
             MoveToWaypoint();
 
-            // 检查是否到达巡逻点
+            // Check if reached waypoint
             if (Vector2.Distance(transform.position, waypoints[currentWaypointIndex].position) < 0.1f)
             {
-                // 到达巡逻点，开始等待
+                // Reached waypoint, start waiting
                 waitCounter = 0f;
                 isWaiting = true;
 
-                // 更新下一个巡逻点索引
+                // Update next waypoint index
                 currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
             }
         }
 
-        // 更新动画状态
+        // Update animation state
         if (anim != null)
         {
             anim.SetBool("isAlive", isAlive);
@@ -104,20 +104,20 @@ public class EnemyPatrol : MonoBehaviour
 
     private void MoveToWaypoint()
     {
-        // 获取目标位置
+        // Get target position
         Vector3 targetPosition = waypoints[currentWaypointIndex].position;
 
-        // 根据巡逻轴选择移动方向
+        // Select movement direction based on patrol axis
         if (patrolAxis == PatrolAxis.Horizontal)
         {
-            // 水平移动
+            // Horizontal movement
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 new Vector3(targetPosition.x, transform.position.y, transform.position.z),
                 moveSpeed * Time.deltaTime
             );
 
-            // 自动翻转方向
+            // Auto-flip direction
             if ((targetPosition.x > transform.position.x && !isFacingRight) ||
                 (targetPosition.x < transform.position.x && isFacingRight))
             {
@@ -126,7 +126,7 @@ public class EnemyPatrol : MonoBehaviour
         }
         else
         {
-            // 垂直移动
+            // Vertical movement
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 new Vector3(transform.position.x, targetPosition.y, transform.position.z),
@@ -137,7 +137,7 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Flip()
     {
-        // 翻转方向
+        // Flip direction
         isFacingRight = !isFacingRight;
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
@@ -151,35 +151,35 @@ public class EnemyPatrol : MonoBehaviour
             ApplyDamageToPlayer(collision.gameObject);
             return;
         }
-        // 检测玩家碰撞
+
+        // Detect player collision
         // Debug.LogError("准备踩头");
         if (((1 << collision.gameObject.layer) & playerLayer) != 0 && !collision.GetComponent<CatController>().isDead)
         {
-            // Debug.LogError("采种");
+            // Debug.LogError("踩中");
 
-            // 检查是否从头顶踩下
+            // Check if stomping from above
             if (!collision.GetComponent<CatController>().isDead)
             {
                 bool isHeadStomp = CheckHeadStomp(collision);
 
                 if (isHeadStomp)
                 {
-                    // 玩家踩头击杀怪物
+                    // Player stomped head, kill enemy
                     KillEnemy(collision.gameObject);
                 }
                 else
                 {
-                    // 普通碰撞，对玩家造成伤害
+                    // Normal collision, damage player
                     ApplyDamageToPlayer(collision.gameObject);
                 }
             }
-        
         }
     }
 
     private bool CheckHeadStomp(Collider2D playerCollider)
     {
-        // 检测玩家是否从头顶踩下
+        // Detect if player stomped from above
         Vector2 boxSize = new Vector2(col.bounds.size.x * 0.8f, headCheckRadius * 2);
         Collider2D[] colliders = Physics2D.OverlapBoxAll(
             headCheck.position,
@@ -192,7 +192,7 @@ public class EnemyPatrol : MonoBehaviour
         {
             if (collider == playerCollider)
             {
-                // 给玩家一个弹跳力
+                // Give player bounce force
                 Rigidbody2D playerRb = playerCollider.GetComponent<Rigidbody2D>();
                 if (playerRb != null)
                 {
@@ -208,7 +208,7 @@ public class EnemyPatrol : MonoBehaviour
 
     private void ApplyDamageToPlayer(GameObject player)
     {
-        // 获取玩家的生命值组件并造成伤害
+        // Get player health component and apply damage
         CatController playerHealth = player.GetComponent<CatController>();
         if (playerHealth != null)
         {
@@ -218,36 +218,36 @@ public class EnemyPatrol : MonoBehaviour
 
     private void KillEnemy(GameObject player)
     {
-        // 标记怪物为死亡状态
+        // Mark enemy as dead
         if (player.GetComponent<CatController>().isDead)
         {
             return;
         }
         isAlive = false;
 
-        // 禁用碰撞器
+        // Disable collider
         if (col != null)
         {
             col.enabled = false;
         }
 
-        // 播放死亡动画
+        // Play death animation
         if (anim != null)
         {
             anim.SetBool("isAlive", false);
         }
 
-        // 触发死亡事件
-       // OnEnemyKilled?.Invoke();
+        // Trigger death event
+        // OnEnemyKilled?.Invoke();
 
-        // 一段时间后销毁怪物
+        // Destroy enemy after delay
         Destroy(gameObject, 0f);
     }
 
-    // 在编辑器中绘制巡逻路径和头顶检测区域
+    // Draw patrol path and head detection area in editor
     private void OnDrawGizmosSelected()
     {
-        // 绘制巡逻路径
+        // Draw patrol path
         if (waypoints != null && waypoints.Length > 1)
         {
             Gizmos.color = Color.red;
@@ -256,14 +256,14 @@ public class EnemyPatrol : MonoBehaviour
                 Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
             }
 
-            // 闭合回路
+            // Close loop
             if (waypoints.Length > 2)
             {
                 Gizmos.DrawLine(waypoints[waypoints.Length - 1].position, waypoints[0].position);
             }
         }
 
-        // 绘制头顶检测区域
+        // Draw head detection area
         if (headCheck != null)
         {
             Gizmos.color = Color.green;

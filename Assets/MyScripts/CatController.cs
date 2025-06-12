@@ -4,28 +4,28 @@ using UnityEngine.SceneManagement;
 
 public class CatController : MonoBehaviour
 {
-    // 移动参数
-    public float moveSpeed = 5f;      // 左右移动速度
-    public float jumpForce = 20f;      // 跳跃力度
+    // Movement parameters
+    public float moveSpeed = 5f;      // Left/right movement speed
+    public float jumpForce = 20f;      // Jumping force
 
-    // 按键设置
-    public KeyCode leftKey = KeyCode.A;      // 左移按键
-    public KeyCode rightKey = KeyCode.D;     // 右移按键
-    public KeyCode jumpKey = KeyCode.W;  // 跳跃按键
-    public KeyCode DownKey = KeyCode.S;  // 传送按键
+    // Key settings
+    public KeyCode leftKey = KeyCode.A;      // Left movement key
+    public KeyCode rightKey = KeyCode.D;     // Right movement key
+    public KeyCode jumpKey = KeyCode.W;  // Jump key
+    public KeyCode downKey = KeyCode.S;  // Teleport key
 
-    // 地面检测
+    // Ground detection
     public Transform groundCheck;
     public float groundCheckRadius = 0.1f;
     public LayerMask groundLayer;
     private bool isGrounded;
 
-    // 组件引用
+    // Component references
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    // 移动状态
+    // Movement state
     private float horizontalInput = 0f;
     private bool isJumping = false;
     public bool isInBoxForward = false;
@@ -33,11 +33,31 @@ public class CatController : MonoBehaviour
     public bool isInDoor = false;
     public LayerMask detectionLayers;
 
-    //当前观测的box
+    // Currently observed box
     public BoxController curLookBox;
 
     public bool isDead = false;
 
+
+    // left and right Wall check
+ 
+    private float wallCheckDistance = 0.5f;
+    public LayerMask whatIsWall;
+    private bool isTouchingLeftWall;
+    private bool isTouchingRightWall;
+    private void CheckSurroundings()
+    {
+        // 检测左侧墙壁
+        isTouchingLeftWall = Physics2D.Raycast(transform.position, -Vector2.right, wallCheckDistance, whatIsWall);
+
+        // 检测右侧墙壁
+        isTouchingRightWall = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, whatIsWall);
+
+        if (isTouchingRightWall)
+        {
+            Debug.LogError("检测到右墙壁");
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,43 +67,44 @@ public class CatController : MonoBehaviour
 
     void Update()
     {
-        // 地面检测
+        // Ground detection
         if (isDead)
         {
             return;
         }
+
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         animator.SetBool("IsGrounded", isGrounded);
 
-        // 明确按键控制移动
+        CheckSurroundings();
+        // Explicit key control for movement
         horizontalInput = 0f;
         if (Input.GetKey(leftKey))
             horizontalInput = -1f;
         if (Input.GetKey(rightKey))
             horizontalInput = 1f;
 
-        if (Input.GetKey(DownKey)&& isInBoxForward&& curBox!=null)
+        if (Input.GetKey(downKey) && isInBoxForward && curBox != null)
         {
             curBox.StartIn();
         }
-        else if (Input.GetKey(DownKey) && isInDoor)
+        else if (Input.GetKey(downKey) && isInDoor)
         {
-            if (SceneManager.sceneCountInBuildSettings> SceneManager.GetActiveScene().buildIndex + 1)
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
-
-           // print("过关");
+            //if (SceneManager.sceneCountInBuildSettings > SceneManager.GetActiveScene().buildIndex + 1)
+            //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            UIController._instance.CurLevelWin();
         }
 
-        // 翻转角色朝向
+        // Flip character direction
         if (horizontalInput > 0)
             spriteRenderer.flipX = false;
         else if (horizontalInput < 0)
             spriteRenderer.flipX = true;
 
-        // 设置移动动画
+        // Set movement animation
         animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
 
-        // 跳跃控制
+        // Jump control
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
             isJumping = true;
@@ -91,34 +112,30 @@ public class CatController : MonoBehaviour
         }
 
 
-        // 发射射线的起点（通常是角色位置）
+        // Start point of the ray (usually character position)
         Vector2 origin = transform.position;
 
-        // 射线方向（根据角色朝向决定）
+        // Ray direction (determined by character facing)
         Vector2 direction = !spriteRenderer.flipX ? Vector2.right : Vector2.left;
 
-        // 发射射线并获取结果
+        // Cast the ray and get results
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, 3, detectionLayers);
 
-        // 绘制射线（仅调试时可见）
+        // Draw the ray (visible only in debug mode)
         Debug.DrawRay(origin, direction * 3, Color.red);
 
-        // 处理碰撞结果
+        // Process collision results
         if (hit.collider != null)
         {
-            Debug.Log("检测到物体: " + hit.collider.tag);
-
-            // 这里可以添加具体逻辑，如停止移动、触发交互等
+            // Add specific logic here, such as stopping movement or triggering interaction
             if (hit.collider.CompareTag("Box"))
             {
                 curLookBox = hit.transform.GetComponent<BoxController>();
                 curLookBox.boxCanMove = false;
-
             }
         }
         else
         {
-            Debug.Log("没监测 ");
             if (curLookBox)
             {
                 curLookBox.boxCanMove = true;
@@ -128,10 +145,21 @@ public class CatController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 应用移动
+        // Apply movement
+        if (isTouchingLeftWall && horizontalInput < 0)
+        {
+            horizontalInput = 0;
+        }
+
+        // 当碰到右侧墙壁时，禁止向右移动
+        if (isTouchingRightWall && horizontalInput > 0)
+        {
+            horizontalInput = 0;
+        }
+
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 
-        // 应用跳跃力（在FixedUpdate中确保物理一致性）
+        // Apply jump force (in FixedUpdate for physics consistency)
         if (isJumping)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -139,7 +167,7 @@ public class CatController : MonoBehaviour
         }
     }
 
-    // 绘制地面检测范围（仅调试时可见）
+    // Draw ground detection range (visible only in debug mode)
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -148,17 +176,13 @@ public class CatController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.transform.tag == "DC")&& !isDead)
+        if ((collision.transform.tag == "DC") && !isDead)
         {
-            Debug.LogError("阵亡");
-            isDead = true;
-            rb.freezeRotation = false;
-            transform.eulerAngles = new Vector3(0, 0, 150);
-            ApplyKnockback(rb);
-            transform.GetComponent<Collider2D>().isTrigger = true;
+            TakeDamage();
         }
     }
-    public void TakeDamage() 
+
+    public void TakeDamage()
     {
         if (!isDead)
         {
@@ -172,22 +196,23 @@ public class CatController : MonoBehaviour
             StartCoroutine(WaitToLoadSceen());
         }
     }
+
     private void ApplyKnockback(Rigidbody2D playerRb)
     {
-        // 计算击退方向（远离地刺）
+        // Calculate knockback direction (away from spikes)
         Vector2 knockbackDirection = (playerRb.transform.position - transform.position).normalized;
 
-        // 调整垂直方向的力度
+        // Adjust vertical force
         knockbackDirection.y = 2;
 
-        // 应用击退力
+        // Apply knockback force
         playerRb.velocity = Vector2.zero;
         playerRb.AddForce(knockbackDirection * 5, ForceMode2D.Impulse);
     }
 
     IEnumerator WaitToLoadSceen()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

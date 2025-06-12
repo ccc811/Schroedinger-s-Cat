@@ -2,29 +2,29 @@ using UnityEngine;
 
 public class OscillateRotation : MonoBehaviour
 {
-    [Header("旋转参数")]
-    [SerializeField] private float minAngle = -70f; // 最小旋转角度
-    [SerializeField] private float maxAngle = 70f; // 最大旋转角度
-    [SerializeField] private float rotationSpeed = 45f; // 旋转速度 (度/秒)
-    [SerializeField] private bool startAtMin = true; // 是否从最小角度开始
-    [SerializeField] private bool rotateInstantly = false; // 是否瞬间转向
+    [Header("Rotation Parameters")]
+    [SerializeField] private float minAngle = -70f; // Minimum rotation angle
+    [SerializeField] private float maxAngle = 70f; // Maximum rotation angle
+    [SerializeField] private float rotationSpeed = 45f; // Rotation speed (degrees/second)
+    [SerializeField] private bool startAtMin = true; // Whether to start at the minimum angle
+    [SerializeField] private bool rotateInstantly = false; // Whether to rotate instantly
 
-    [Header("等待时间")]
-    [SerializeField] private float waitAtMin = 0.5f; // 在最小角度处等待的时间
-    [SerializeField] private float waitAtMax = 0.5f; // 在最大角度处等待的时间
+    [Header("Wait Times")]
+    [SerializeField] private float waitAtMin = 0.5f; // Wait time at minimum angle
+    [SerializeField] private float waitAtMax = 0.5f; // Wait time at maximum angle
 
-    private float currentAngle; // 当前角度
-    private float direction = 1f; // 旋转方向 (1: 正向, -1: 反向)
-    private float waitTimer = 0f; // 等待计时器
-    private bool isWaiting = false; // 是否正在等待
+    private float currentAngle; // Current angle
+    private float direction = 1f; // Rotation direction (1: forward, -1: backward)
+    private float waitTimer = 0f; // Wait timer
+    private bool isWaiting = false; // Whether currently waiting
 
     private void Start()
     {
-        // 初始化角度
+        // Initialize angle
         currentAngle = startAtMin ? minAngle : maxAngle;
         direction = startAtMin ? 1f : -1f;
 
-        // 设置初始旋转
+        // Set initial rotation
         transform.rotation = Quaternion.Euler(0, 0, currentAngle);
     }
 
@@ -32,70 +32,70 @@ public class OscillateRotation : MonoBehaviour
     {
         if (isWaiting)
         {
-            // 等待计时
+            // Wait timer
             waitTimer += Time.deltaTime;
 
             if ((direction > 0 && waitTimer >= waitAtMax) ||
                 (direction < 0 && waitTimer >= waitAtMin))
             {
-                // 等待结束，切换方向
+                // Wait finished, switch direction
                 isWaiting = false;
                 waitTimer = 0f;
 
                 if (rotateInstantly)
                 {
-                    // 瞬间转向模式
+                    // Instant rotation mode
                     direction *= -1;
                 }
             }
             else
             {
-                // 仍在等待，不执行旋转
+                // Still waiting, do not rotate
                 return;
             }
         }
 
-        // 计算本次旋转量
+        // Calculate rotation amount for this frame
         float rotationAmount = rotationSpeed * Time.deltaTime * direction;
 
-        // 预测下一个角度
+        // Predict next angle
         float nextAngle = currentAngle + rotationAmount;
 
-        // 检查是否到达或超过边界
+        // Check if reaching or exceeding boundaries
         if ((direction > 0 && nextAngle >= maxAngle) ||
             (direction < 0 && nextAngle <= minAngle))
         {
-            // 到达或超过边界，调整到边界角度
+            // Reached or exceeded boundary, adjust to boundary angle
             currentAngle = direction > 0 ? maxAngle : minAngle;
             transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
-            // 开始等待
+            // Start waiting
             isWaiting = true;
 
             if (!rotateInstantly)
             {
-                // 平滑转向模式
+                // Smooth rotation mode
                 direction *= -1;
             }
         }
         else
         {
-            // 未到达边界，继续旋转
+            // Not reached boundary, continue rotating
             currentAngle = nextAngle;
             transform.rotation = Quaternion.Euler(0, 0, currentAngle);
         }
     }
 
-    // 在编辑器中绘制旋转范围
+    // Draw rotation range in editor
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
 
-        // 绘制当前旋转角度
+        // Draw current rotation angle
         Vector3 currentDirection = Quaternion.Euler(0, 0, currentAngle) * Vector3.right;
         Gizmos.DrawLine(transform.position, transform.position + currentDirection * 2f);
 
-        // 绘制最小和最大旋转角度
+        // Draw minimum and maximum rotation angles
         Vector3 minDirection = Quaternion.Euler(0, 0, minAngle) * Vector3.right;
         Vector3 maxDirection = Quaternion.Euler(0, 0, maxAngle) * Vector3.right;
 
@@ -105,10 +105,10 @@ public class OscillateRotation : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + maxDirection * 2f);
 
-        // 绘制旋转范围弧线
+        // Draw rotation range arc
         DrawArc(transform.position, minAngle, maxAngle, 2f, 20);
 
-        // 绘制旋转方向
+        // Draw rotation direction
         if (isWaiting)
         {
             Gizmos.color = Color.white;
@@ -124,7 +124,7 @@ public class OscillateRotation : MonoBehaviour
         DrawArrow(center, arrowDir, 0.3f);
     }
 
-    // 绘制弧线辅助方法
+    // Helper method to draw arc
     private void DrawArc(Vector3 center, float startAngle, float endAngle, float radius, int segments)
     {
         Gizmos.color = Color.yellow;
@@ -142,12 +142,12 @@ public class OscillateRotation : MonoBehaviour
         }
     }
 
-    // 绘制箭头辅助方法
+    // Helper method to draw arrow
     private void DrawArrow(Vector3 position, Vector3 direction, float size)
     {
         Gizmos.DrawLine(position, position + direction);
 
-        // 绘制箭头头部
+        // Draw arrowhead
         Vector3 arrowHead = position + direction;
         Vector3 arrowSide1 = Quaternion.Euler(0, 0, 150) * direction.normalized * size;
         Vector3 arrowSide2 = Quaternion.Euler(0, 0, -150) * direction.normalized * size;
